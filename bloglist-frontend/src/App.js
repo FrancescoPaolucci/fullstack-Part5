@@ -47,7 +47,56 @@ const App = () => {
     blogsFormRef.current.toggleVisibility();
     blogService.create(blogObject).then((returnedBLog) => {
       setBlogs(blogs.concat(returnedBLog));
+      setNotificationMessag("Blogg added succesfully");
+      setTimeout(() => {
+        setNotificationMessag(null);
+      }, 5000);
     });
+  };
+
+  const addLikesAt = (id) => {
+    const blog = blogs.find((b) => b.id === id);
+    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+
+    blogService
+      .update(id, updatedBlog)
+      .then((returnedBlog) => {
+        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)));
+      })
+      .catch((error) => {
+        setErrorMessage("Something went wrong");
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
+  };
+
+  const eliminaAt = (id) => {
+    const blog = blogs.find((b) => b.id === id);
+    if (
+      window.confirm(`Do you really want to delete this blog = ${blog.name}?`)
+    ) {
+      blogService
+        .elimina(id)
+        .then((res) => {
+          const blogD = blogs.filter((b) => b.id !== id);
+          setBlogs(blogD);
+          setNotificationMessag(`Blog ${blog} was deleted`);
+          setTimeout(() => {
+            setNotificationMessag(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          setErrorMessage(
+            `Blog: ${blog.name} was already deleted or doesn't exist`
+          );
+          const blogD = blogs.filter((b) => b.id !== id);
+          setBlogs(blogD);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        });
+    }
   };
 
   const handleLogin = async (event) => {
@@ -69,13 +118,6 @@ const App = () => {
         setErrorMessage(null);
       }, 5000);
     }
-  };
-
-  const handleShowButton = (e) => {
-    console.log("id:", e.target.value);
-    const result = blogs.filter((value) => {
-      return value.id === e.target.value;
-    });
   };
 
   const loginForm = () => (
@@ -133,9 +175,16 @@ const App = () => {
           </p>
           <div>{blogsForm()}</div>
           <div>
-            {blogs.map((value) => (
-              <BlogDetails keys={value.id} blogs={value} />
-            ))}
+            {blogs
+              .sort((a, b) => b.likes - a.likes)
+              .map((value) => (
+                <BlogDetails
+                  key={value.id}
+                  blogs={value}
+                  addLikes={() => addLikesAt(value.id)}
+                  elimina={() => eliminaAt(value.id)}
+                />
+              ))}
           </div>
         </div>
       )}
