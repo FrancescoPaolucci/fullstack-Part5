@@ -6,10 +6,10 @@ const BlogDetails = ({ blogs, addLikes, elimina }) => {
   const showWhenVisible = { display: allVisible ? '' : 'none' }
 
   return (
-    <div>
-      <div className='Blogs' style={hideWhenVisible}>
+    <div id='blogdiv'>
+      <div  className='Blogs' style={hideWhenVisible}>
         <p> {blogs.title}</p>
-        <button onClick={() => setAllVisible(true)}>Show</button>
+        <button id="showButton" onClick={() => setAllVisible(true)}>Show</button>
       </div>
       <div className='BlogDetails' style={showWhenVisible}>
         <p> Title: {blogs.title}</p>
@@ -17,10 +17,10 @@ const BlogDetails = ({ blogs, addLikes, elimina }) => {
         <p> URL: {blogs.url}</p>
         <p>
           {' '}
-          Likes:{blogs.likes} <button className='LikeButton' onClick={addLikes}>Likes</button>
+          Likes:{blogs.likes} <button id="LikeButton" className='LikeButton' onClick={addLikes}>Likes</button>
         </p>
         <p>
-          <button onClick={elimina}>X Delete</button>
+          <button id="deleteButton" onClick={elimina}>X Delete</button>
         </p>
         <p>
           <button onClick={() => setAllVisible(false)}>Hide</button>

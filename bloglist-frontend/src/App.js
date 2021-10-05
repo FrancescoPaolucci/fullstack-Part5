@@ -81,14 +81,14 @@ const App = () => {
         .then((res) => {
           const blogD = blogs.filter((b) => b.id !== id)
           setBlogs(blogD)
-          setNotificationMessag(`Blog ${blog} was deleted`)
+          setNotificationMessag(`Blog ${blog.title} was deleted`)
           setTimeout(() => {
             setNotificationMessag(null)
           }, 5000)
         })
         .catch((error) => {
           setErrorMessage(
-            `Blog: ${blog.name} was already deleted or doesn't exist`
+            `Blog: ${blog.name} was already deleted or you don't have permission`
           )
           const blogD = blogs.filter((b) => b.id !== id)
           setBlogs(blogD)
@@ -125,6 +125,7 @@ const App = () => {
       <div>
         username
         <input
+          id="username"
           type="text"
           value={username}
           name="Username"
@@ -137,13 +138,14 @@ const App = () => {
       <div>
         password
         <input
+          id="password"
           type="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button id="login-button" type="submit">login</button>
     </form>
   )
 
